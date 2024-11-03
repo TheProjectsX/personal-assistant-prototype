@@ -26,20 +26,21 @@ CommandIntents = [
     },
     {
         "min_match": 2,
-        "required_keywords": ["weather"],
-        "keywords": [["what", "check", ["show", "display"]], "weather"],
-        "command": "current_weather",
-    },
-    {
-        "min_match": 2,
         "required_keywords": ["date"],
         "keywords": [["what", "tell", ["can you", "please"]], "date"],
         "command": "current_date",
     },
     {
         "min_match": 2,
-        "required_keywords": ["music"],
-        "keywords": [["play", "start", ["some", "the"]], "music"],
+        "required_keywords": ["weather"],
+        "keywords": [["what", "check", ["show", "display"]], "weather"],
+        "command": "current_weather",
+    },
+    {
+        "min_match": 1,
+        "required_keywords": [],
+        "keywords": [[["play", "music"], "drop the beats", "play"]],
+        "stop_words": ["some", "the", "any"],
         "command": "play_music",
     },
     {
@@ -87,12 +88,12 @@ CommandIntents = [
     {
         "min_match": 2,
         "required_keywords": ["translate"],
-        "keywords": [["translate", "interpret"], "text"],
+        "keywords": [["translate", "interpret"], ["text", "to"]],
         "command": "translate_text",
     },
     {
         "min_match": 2,
-        "required_keywords": ["location"],
+        "required_keywords": [],
         "keywords": [["where", "locate"], "I"],
         "command": "get_location",
     },
