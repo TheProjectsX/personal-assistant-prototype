@@ -87,6 +87,12 @@ CommandIntents = [
     },
     {
         "min_match": 2,
+        "required_keywords": ["translatessssss"],
+        "keywords": [["live", "realtime"], ["translate", "interpret"], ["text", "to"]],
+        "command": "translate_realtime",
+    },
+    {
+        "min_match": 2,
         "required_keywords": ["translate"],
         "keywords": [["translate", "interpret"], ["text", "to"]],
         "command": "translate_text",

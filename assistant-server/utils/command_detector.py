@@ -1,7 +1,7 @@
 import re
 from typing import Union
 from fuzzywuzzy import fuzz
-from COMMANDS import CommandIntents
+from .COMMANDS import CommandIntents
 
 """
 Intents Keywords List Logic:

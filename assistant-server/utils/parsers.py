@@ -6,10 +6,12 @@ This file contains the Functions which will parse the given text and make respon
 
 from datetime import datetime
 import pytz
-import ResponseCodes as res_codes
+
+# import .ResponseCodes as res_codes
+from . import ResponseCodes as res_codes
+from .COMMANDS import CommandIntents
+from . import helpers
 import requests
-from COMMANDS import CommandIntents
-import helpers
 from googletrans import Translator
 
 
@@ -90,7 +92,8 @@ def play_music(text: str, arguments: dict = {}) -> dict:
     else:
         youtube_url = helpers.parse_youtube_url(cleanedText)
         response = {
-            "command": res_codes.PLAY_MUSIC,
+            "command": res_codes.RUN_FUNCTION,
+            "function": "play_music",
             "text": f"Playing {cleanedText}",
             "arguments": {
                 "type": "custom",
@@ -131,7 +134,7 @@ def translate_text(text: str, arguments: dict = {}) -> dict:
         dest = languages[1].get("code")
 
     cleanedText = helpers.clean_text(
-        cleanedText, items=[x.get("word") for x in languages]
+        cleanedText, items=[x.get("word") for x in languages[:2]]
     )
 
     translator = Translator()
@@ -143,6 +146,35 @@ def translate_text(text: str, arguments: dict = {}) -> dict:
     return response
 
 
+# Realtime Translate
+def translate_realtime(text: str, arguments: dict = {}) -> dict:
+    intent: dict = [
+        x for x in CommandIntents if x.get("command") == "translate_realtime"
+    ][0]
+    keywords: list = intent.get("keywords")
+    cleanedText = helpers.clean_text(text, items=helpers.flatten_and_unique(keywords))
+
+    languages: list = helpers.detect_language_words(cleanedText)
+
+    src, dest = "auto", "en"
+    if len(languages) == 1:
+        dest = languages[0].get("code")
+    elif len(languages) > 1:
+        src = languages[0].get("code")
+        dest = languages[1].get("code")
+
+    response = {
+        "command": res_codes.RUN_FUNCTION,
+        "function": "translate_realtime",
+        "arguments": {
+            "src": src,
+            "dest": dest,
+        },
+    }
+
+    return response
+
+
 # Test Run
 if __name__ == "__main__":
-    print(translate_text("translate to japaneese Thank you very much!"))
+    print(translate_realtime("translate realtime to japaneese"))

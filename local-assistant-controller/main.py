@@ -1,19 +1,7 @@
 import requests
-import pyttsx3
-
-engine = pyttsx3.init()
-
-voices = engine.getProperty("voices")
-engine.setProperty("voice", voices[1].id)
-
+import functions as fns
 
 SERVER_URL = "http://localhost:5000"
-
-
-def speak(text):
-    print("Speaking:", text)
-    engine.say(text)
-    engine.runAndWait()
 
 
 while True:
@@ -28,12 +16,16 @@ while True:
 
         json = {"text": text.replace("pluto", "", 1).strip()}
 
-        response = requests.post(f"{SERVER_URL}/assistant", json=json).json()
+        response: dict = requests.post(f"{SERVER_URL}/assistant", json=json).json()
 
         if response.get("command") == "speak":
-            speak(response.get("text"))
+            fns.speak(response.get("text"))
+        elif response.get("command") == "run_function":
+            func = getattr(fns, response.get("function"))
+            func(response.get("arguments", {}), text=response.get("text", ""))
         else:
             print(response)
+
     except Exception as e:
         print(e)
-        speak("Something went wrong!")
+        fns.speak("Something went wrong!")
